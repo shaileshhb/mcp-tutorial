@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -9,12 +10,18 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/shaileshhb/mcp-tutorial/server"
 	"github.com/shaileshhb/mcp-tutorial/tool"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 
 	mcpServer := server.NewMcpServer(logger)
@@ -40,8 +47,13 @@ func main() {
 		Description: "Convert a currency to another currency",
 	}, tool.ConvertCurrencyTool)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	server := &http.Server{
-		Addr:              ":8080",
+		Addr:              ":" + port,
 		Handler:           router,
 		ReadTimeout:       5 * time.Minute,
 		ReadHeaderTimeout: 10 * time.Second,
