@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -15,20 +16,26 @@ func NewHttpServer(server *mcp.Server, mcpHandler *mcp.StreamableHTTPHandler) *m
 	router := mux.NewRouter()
 	router.Use(security.RecoveryMiddleware)
 
-	router.HandleFunc("/health", func(
-		w http.ResponseWriter,
-		req *http.Request,
-	) {
+	router.HandleFunc("/health", func(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	}).Methods(http.MethodGet)
 
-	router.HandleFunc("/mcp", func(
-		w http.ResponseWriter,
-		req *http.Request,
-	) {
+	// Optional root route to avoid confusion when testing in browser.
+	router.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("MCP server is running. Use /mcp endpoint."))
+	}).Methods(http.MethodGet)
+
+	router.HandleFunc("/mcp", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Printf(
+			"method=%s path=%s auth=%q\n",
+			req.Method,
+			req.URL.Path,
+			req.Header.Get("Authorization"),
+		)
 		mcpHandler.ServeHTTP(w, req)
-	}).Methods(http.MethodPost, http.MethodGet)
+	}).Methods(http.MethodPost, http.MethodGet, http.MethodOptions)
 
 	return router
 }
