@@ -31,6 +31,7 @@ func main() {
 	}, &mcp.StreamableHTTPOptions{
 		Logger:       logger,
 		JSONResponse: true,
+		Stateless:    false,
 	})
 
 	router := server.NewHttpServer(mcpServer, mcpHandler)
@@ -63,7 +64,7 @@ func main() {
 	}
 
 	go func() {
-		logger.Info("starting server", "addr", ":8080")
+		logger.Info("starting server", "addr", port)
 
 		if err := server.ListenAndServe(); err != nil &&
 			err != http.ErrServerClosed {

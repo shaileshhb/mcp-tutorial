@@ -25,7 +25,7 @@ func NewHttpServer(server *mcp.Server, mcpHandler *mcp.StreamableHTTPHandler) *m
 	router.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("MCP server is running. Use /mcp endpoint."))
-	}).Methods(http.MethodGet)
+	}).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/mcp", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Printf(
