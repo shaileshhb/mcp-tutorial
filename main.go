@@ -28,9 +28,10 @@ func main() {
 	mcpHandler := mcp.NewStreamableHTTPHandler(func(request *http.Request) *mcp.Server {
 		return mcpServer
 	}, &mcp.StreamableHTTPOptions{
-		Logger:       logger,
-		JSONResponse: true,
-		Stateless:    false,
+		Logger:                     logger,
+		JSONResponse:               true,
+		Stateless:                  false,
+		DisableLocalhostProtection: true,
 	})
 
 	router := server.NewHttpServer(mcpServer, mcpHandler)
