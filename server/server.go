@@ -15,6 +15,7 @@ import (
 func NewHttpServer(server *mcp.Server, mcpHandler *mcp.StreamableHTTPHandler) *mux.Router {
 	router := mux.NewRouter()
 	router.Use(security.RecoveryMiddleware)
+	router.Use(security.HandleCors)
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)
