@@ -8,14 +8,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/shaileshhb/mcp-tutorial/security"
 )
 
 // NewHttpServer
 func NewHttpServer(server *mcp.Server, mcpHandler *mcp.StreamableHTTPHandler) *mux.Router {
 	router := mux.NewRouter()
-	router.Use(security.RecoveryMiddleware)
-	router.Use(security.HandleCors)
+	// router.Use(security.RecoveryMiddleware)
+	// router.Use(security.HandleCors)
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)

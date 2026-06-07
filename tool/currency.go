@@ -34,6 +34,7 @@ const BASE_CURRENCY_API_URL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currenc
 func ConvertCurrencyTool(ctx context.Context, req *mcp.CallToolRequest, input ConvertCurrencyInput) (*mcp.CallToolResult, any, error) {
 	input.FromCurrency = strings.ToLower(input.FromCurrency)
 	input.ToCurrency = strings.ToLower(input.ToCurrency)
+	fmt.Println("inside convert currency tool input", input)
 
 	apiURL := fmt.Sprintf("%s/%s.json", BASE_CURRENCY_API_URL, input.FromCurrency)
 	resp, err := http.Get(apiURL)
